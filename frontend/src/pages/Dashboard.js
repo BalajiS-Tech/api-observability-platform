@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [selectedApi, setSelectedApi] = useState(null);
   const [performanceLogs, setPerformanceLogs] = useState([]);
   const [errorLogs, setErrorLogs] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchApis = async () => {
@@ -24,6 +25,7 @@ const Dashboard = () => {
   }, []);
 
   const handleSelectApi = async (api) => {
+    setLoading(true);
     setSelectedApi(api);
 
     const perf = await getPerformanceLogs(api._id);
@@ -31,6 +33,7 @@ const Dashboard = () => {
 
     setPerformanceLogs(perf);
     setErrorLogs(errors);
+    setLoading(false);
   };
 
   const uptime =
@@ -42,6 +45,8 @@ const Dashboard = () => {
         ).toFixed(2)
       : 0;
 
+  const status = uptime > 80 ? "UP" : "DOWN";
+
   return (
     <div className="dashboard-container">
       <h1>API Observability Dashboard</h1>
@@ -50,18 +55,15 @@ const Dashboard = () => {
         <APIList apis={apis} onSelect={handleSelectApi} />
       </div>
 
-      {selectedApi && (
+      {loading && <p>Loading data...</p>}
+
+      {selectedApi && !loading && (
         <>
           <div className="card-container">
             <SummaryCard title="Uptime %" value={`${uptime}%`} />
-            <SummaryCard
-              title="Total Requests"
-              value={performanceLogs.length}
-            />
-            <SummaryCard
-              title="Total Errors"
-              value={errorLogs.length}
-            />
+            <SummaryCard title="Total Requests" value={performanceLogs.length} />
+            <SummaryCard title="Total Errors" value={errorLogs.length} />
+            <SummaryCard title="Current Status" value={status} />
           </div>
 
           <div className="card">

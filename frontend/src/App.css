@@ -47,3 +47,23 @@ h1 {
 .api-item:hover {
   background-color: #f0f4ff;
 }
+
+
+.card h2 {
+  color: #3498db;
+  margin-top: 10px;
+}
+
+.card h4 {
+  margin: 0;
+  color: #555;
+}
+
+.card-container .card:nth-child(4) h2 {
+  color: green;
+}
+
+p {
+  text-align: center;
+  font-weight: bold;
+}
